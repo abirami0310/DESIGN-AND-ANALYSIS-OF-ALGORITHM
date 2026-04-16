@@ -1,0 +1,141 @@
+HEAPSORT
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    int H[100], n;
+    int k, j, v;
+    bool heap;
+
+    cout << "Enter the no of elements: ";
+    cin >> n;
+    cout << "Enter the elements:\n";
+    for (int i = 1; i <= n; i++) {
+        cin >> H[i];
+    }
+
+  for (int i = n / 2; i >= 1; i--) {
+         k = i;
+       v = H[k];
+        heap = false;
+        while (!heap && 2 * k <= n) {
+            j = 2 * k;
+            if (j < n && H[j] < H[j + 1]) {
+                j = j + 1;
+            }
+            if (v >= H[j]) {
+                heap = true;
+            } else {
+                H[k] = H[j];
+                k = j;
+            }
+        }
+        H[k] = v;
+    }
+
+cout<<"The max Heap array is:\n";
+for (int i=1;i<=n;i++)
+{
+   cout<<H[i]<<" ";
+}
+cout<<endl;
+int c = n;
+int s;
+    for (int i = n; i > 1; i--) {
+
+      int temp = H[1];
+        H[1] = H[i];
+        H[i] = temp;
+
+        c--;
+        k = 1;
+        v = H[k];
+       heap = false;
+        while (!heap && 2 * k <= c) {
+            j = 2 * k;
+            if (j < c && H[j] < H[j + 1])
+       {
+               j = j + 1;
+            }
+        if (v >= H[j])
+            {
+               heap = true;
+            }
+            else {
+                H[k] = H[j];
+                k = j;
+           }
+        }
+        H[k] = v;
+    }
+
+
+cout << "The ascending order is:\n";
+    for (int i = 1; i <= n; i++) {
+        cout << H[i] << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
+
+Enter the no of elements: 4
+Enter the elements:
+34
+23
+11
+17
+The max Heap array is:
+34 23 11 17
+The ascending order is:
+11 17 23 34
+
+Insertion.cpp
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n;
+
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    int arr[n];
+
+    cout << "Enter " << n << " elements:\n";
+    for(int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+     for(int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+
+
+        while(j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+
+        arr[j + 1] = key;
+    }
+
+    cout << "\nSorted array:\n";
+    for(int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+
+    return 0;
+}
+Enter number of elements: 5
+Enter 5 elements:
+34
+32
+54
+11
+12
+
+Sorted array:
+11 12 32 34 54 
