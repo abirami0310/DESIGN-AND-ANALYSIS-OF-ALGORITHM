@@ -1,0 +1,98 @@
+#include <iostream>
+
+using namespace std;
+
+int n, W;
+int profits[100], weights[100];
+int maxProfit = 0;
+
+// Arrays to track selections
+bool currentPath[100];
+bool bestPath[100];
+
+double getBound(int level, int currentProfit, int currentWeight) {
+    if (currentWeight >= W) return 0;
+    double bound = currentProfit;
+    int totalWeight = currentWeight;
+
+    for (int i = level + 1; i < n; i++) {
+        if (totalWeight + weights[i] <= W) {
+            totalWeight += weights[i];
+            bound += profits[i];
+        } else {
+            bound += (double)(W - totalWeight) * profits[i] / weights[i];
+            break;
+        }
+    }
+    return bound;
+}
+
+void solve(int level, int currentProfit, int currentWeight) {
+    if (currentWeight <= W && currentProfit > maxProfit) {
+        maxProfit = currentProfit;
+        // Record the best selection so far
+        for (int i = 0; i < n; i++) {
+            bestPath[i] = currentPath[i];
+        }
+    }
+
+    if (level == n - 1) return;
+
+    double bound = getBound(level, currentProfit, currentWeight);
+
+    if (bound > maxProfit) {
+        // Include item
+        if (currentWeight + weights[level + 1] <= W) {
+            currentPath[level + 1] = true;
+            solve(level + 1, currentProfit + profits[level + 1], currentWeight + weights[level + 1]);
+        }
+
+        // Exclude item
+        currentPath[level + 1] = false;
+        solve(level + 1, currentProfit, currentWeight);
+    }
+}
+
+int main() {
+    cout << "Enter number of items: ";
+    cin >> n;
+    cout << "Enter max capacity: ";
+    cin >> W;
+
+    cout << "Enter profit and weight for each item:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> profits[i] >> weights[i];
+    }
+
+    // Sort items by ratio
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if ((double)profits[j] / weights[j] < (double)profits[j + 1] / weights[j + 1]) {
+                swap(profits[j], profits[j + 1]);
+                swap(weights[j], weights[j + 1]);
+            }
+        }
+    }
+
+    solve(-1, 0, 0);
+
+    cout << "\n--- Results ---" << endl;
+    int totalWeight = 0;
+    cout << "Selected Profits: ";
+    for (int i = 0; i < n; i++) {
+        if (bestPath[i]) {
+            cout << profits[i] << " ";
+            totalWeight += weights[i];
+        }
+    }
+
+    cout << "\nSelected Weights: ";
+    for (int i = 0; i < n; i++) {
+        if (bestPath[i]) cout << weights[i] << " ";
+    }
+
+    cout << "\nSum of Weights: " << totalWeight << endl;
+    cout << "Maximum Profit: " << maxProfit << endl;
+
+    return 0;
+}
